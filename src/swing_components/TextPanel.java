@@ -13,7 +13,7 @@ public class TextPanel {
 	public TextPanel(){
 		resultado = new JPanel();
 
-		matrizAdjacencias = new JTextArea(10, 10);
+		matrizAdjacencias = new JTextArea(10, 50);
 
 		matrizAdjacencias.setEditable(false);
 

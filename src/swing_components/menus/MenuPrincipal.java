@@ -1,12 +1,10 @@
-package swing_components;
+package swing_components.menus;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -17,11 +15,12 @@ import javax.swing.JTextField;
 
 import IOutilities.IOManagement;
 import grafo.Grafo;
-import grafo.GrafoDirigido;
 import listeners.IupdateInfo;
+import swing_components.Frame;
+import swing_components.PopUpsAssistent;
 
-public class Menu {
-	private JPanel menu;
+public class MenuPrincipal extends Menu{
+
 
 	private JButton resetGrafo;
 	private JButton addVertice;
@@ -39,24 +38,11 @@ public class Menu {
 	private JComboBox<String> opcoesExibicao;
 	private JComboBox<JButton> actions;
 
-	private Grafo grafo;
-	private GrafoDirigido grafoDirigido;
-	private Grafo grafoSimples;
-
-	private IupdateInfo updateInfo;
-
-	public static String titulo;
 
 	@SuppressWarnings("serial")
-	public Menu(IupdateInfo updateInfo){
-		menu = new JPanel();
-		this.updateInfo = updateInfo;
+	public MenuPrincipal(Grafo[] grafos, IupdateInfo updateInfo){
+		super(grafos, updateInfo);
 
-		titulo = "Matriz de Adjacências";
-
-		grafoSimples = new Grafo("Grafo Simples");
-		grafoDirigido = new GrafoDirigido("Grafo Dirigido");
-		grafo = grafoSimples;
 
 		confirmarAction = new JButton("Confirmar");
 		resetGrafo = new JButton("Remover todos"){@Override public String toString(){ return this.getText();}};
@@ -68,10 +54,9 @@ public class Menu {
 		addAresta1 = new JTextField(5);
 		addAresta2 = new JTextField(5);
 
-		Grafo[] comboGrafosOpcoesIniciais = {grafoSimples, grafoDirigido};
-		comboGrafos = new JComboBox<Grafo>(comboGrafosOpcoesIniciais);
+		comboGrafos = new JComboBox<Grafo>(grafos);
 
-		String[] opcoes = {"Matriz", "Lista", "Info"};
+		String[] opcoes = {"Matriz", "Lista","Cliques", "Info"};
 		opcoesExibicao = new JComboBox<String>(opcoes);
 
 		JButton[] actionopcoes = {addVertice,resetGrafo, importarGrafo, exportarGrafo};
@@ -80,8 +65,8 @@ public class Menu {
 		qtdeV = new JLabel(grafo.getvCounter() + "");
 
 
-		addAresta1.addKeyListener(this.digitOnlyAdapter());
-		addAresta2.addKeyListener(this.digitOnlyAdapter());
+		addAresta1.addKeyListener(Menu.digitOnlyAdapter());
+		addAresta2.addKeyListener(Menu.digitOnlyAdapter());
 
 		menu.setLayout(new FlowLayout(FlowLayout.LEFT));
 
@@ -101,6 +86,7 @@ public class Menu {
 		menu.add(comboGrafos);
 		menu.add(opcoesExibicao);
 		//menu.add(result);
+		updateInfo();
 	}
 
 	private void addActionListeners() {
@@ -212,23 +198,10 @@ public class Menu {
 
 	}
 
-	private KeyAdapter digitOnlyAdapter() {
-		KeyAdapter a = new KeyAdapter() {
-			public void keyTyped(KeyEvent e) {
-
-				if (!Character.isDigit(e.getKeyChar()) && e.getKeyChar() != '.') {
-					e.consume();
-				}
-			}
-		};
-
-		return a;
-	}
-
-	private void updateInfo(){
+	protected void updateInfo(){
 		qtdeV.setText(""+grafo.getvCounter());
 
-		updateInfo.updateTitle(titulo + " - " + grafo.getNome());
+		updateInfo.updateTitle(Frame.titulo + " - " + grafo.getNome());
 
 		String exibir = "";
 
@@ -240,6 +213,9 @@ public class Menu {
 			exibir = grafo.toString_Lista();
 		}else if(opcao.compareTo("info") == 0){
 			exibir = grafo.toString_GrafoInfo();
+		}else if(opcao.compareTo("cliques") == 0){
+			updateInfo.updateToMenuClique();
+			opcoesExibicao.setSelectedIndex(0);
 		}
 
 		updateInfo.updateText(exibir);
