@@ -1,4 +1,4 @@
-package Main;
+package main;
 import swing_components.Frame;
 
 public class Main {
