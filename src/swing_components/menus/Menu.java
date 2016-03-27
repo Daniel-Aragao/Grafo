@@ -23,6 +23,7 @@ public abstract class Menu {
 		}
 		menu = new JPanel();
 		menu.setLayout(new FlowLayout(FlowLayout.LEFT));
+//		menu.setBorder(BorderFactory.createEtchedBorder());
 
 		this.grafos = grafos;
 		grafo = grafos[0];

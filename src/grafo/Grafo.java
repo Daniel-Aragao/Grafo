@@ -42,6 +42,15 @@ public class Grafo {
 		return false;
 	}
 
+	public boolean addVertice(Vertice vertice){
+		if(vertices != null){
+			if(vertices.add(vertice)){
+				return true;
+			}
+		}
+		return false;
+	}
+
 //	public Vertice removeVertice(int index) {
 //		Vertice toRemove = null;
 //		if (index <= vertices.size()) {
@@ -151,7 +160,7 @@ public class Grafo {
 		resetLog();
 	}
 
-	public int getvCounter() {
+	public int getNumVertices() {
 		return vertices.size();
 	}
 
@@ -286,6 +295,48 @@ public class Grafo {
 	public ArrayList<String> getGrafoLog() {
 		log.set(2, vertices.size()+"");
 		return log;
+	}
+
+	public ArrayList<Grafo> getCliques(int k){
+		ArrayList<Grafo> cliques = new ArrayList<Grafo>();
+
+		cliques.add(this);
+		cliques.add(this);
+		cliques.add(this);
+		cliques.add(this);
+		cliques.add(this);
+		cliques.add(this);
+//		for(Vertice v : vertices){
+//
+//
+//
+//
+//
+//		}
+
+		return cliques;
+	}
+
+	public Grafo getCliqueMaximal(){
+		Grafo maximal = new Grafo("Maximal");
+
+		maximal.addVertice(getVertice(0));
+		for(int i = 1; i < vertices.size(); i++){
+			Vertice vIterator = vertices.get(i);
+
+			boolean allHave = true;
+			for(Vertice v : maximal.vertices){
+				if(!v.contains(vIterator) || !vIterator.contains(v)){
+					allHave = false;
+				}
+			}
+
+			if(allHave){
+				maximal.addVertice(vIterator);
+			}
+		}
+
+		return maximal;
 	}
 
 

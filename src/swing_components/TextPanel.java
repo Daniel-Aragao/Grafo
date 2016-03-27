@@ -1,32 +1,39 @@
 package swing_components;
 
 import java.awt.BorderLayout;
+import java.util.ArrayList;
 
-import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.border.Border;
 
-public class TextPanel {
-	private JPanel resultado;
+public class TextPanel extends Resultado{
 
 	private JTextArea matrizAdjacencias;
 
 	public TextPanel(){
-		resultado = new JPanel();
+		super();
 
-		matrizAdjacencias = new JTextArea(10, 50);
+		matrizAdjacencias = new JTextArea(10, 10);
 
 		matrizAdjacencias.setEditable(false);
 
-		resultado.setLayout(new BorderLayout());
+		panel.setLayout(new BorderLayout());
 
-		resultado.add(matrizAdjacencias);
+		panel.add(matrizAdjacencias);
 	}
 
-	public JPanel getResultado() {
-		return resultado;
-	}
-
-	public void setText(String text){
+	@Override
+	public void setResultado(String text){
 		matrizAdjacencias.setText(text);
+	}
+
+	@Override
+	public void setResultado(ArrayList<String> texts) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void setBoder(Border border){
+		panel.setBorder(border);
 	}
 }

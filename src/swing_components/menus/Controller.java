@@ -1,11 +1,14 @@
 package swing_components.menus;
 
 import java.awt.BorderLayout;
+import java.util.ArrayList;
 
 import grafo.Grafo;
 import grafo.GrafoDirigido;
 import listeners.IupdateInfo;
+import swing_components.ArrayTextPanel;
 import swing_components.Frame;
+import swing_components.Resultado;
 import swing_components.TextPanel;
 
 public class Controller {
@@ -14,7 +17,10 @@ public class Controller {
 	private Menu menu;
 	private MenuPrincipal menuPrincipal;
 	private MenuClique menuClique;
-	private TextPanel resultado;
+
+	private Resultado resultado;
+	private Resultado textPanel;
+	private Resultado arrayTextPanel;
 
 	IupdateInfo updateInfo;
 
@@ -24,7 +30,10 @@ public class Controller {
 
 	public Controller(){
 		frame = new Frame();
-		resultado = new TextPanel();
+
+		textPanel = new TextPanel();
+		arrayTextPanel = new ArrayTextPanel();
+		resultado = textPanel;
 
 		updateInfo = new IupdateInfo() {
 
@@ -35,7 +44,14 @@ public class Controller {
 
 			@Override
 			public void updateText(String newText) {
-				resultado.setText(newText);
+				updateView(textPanel);
+				resultado.setResultado(newText);
+			}
+
+			@Override
+			public void updateArrayText(ArrayList<String> texts) {
+				updateView(arrayTextPanel);
+				resultado.setResultado(texts);
 			}
 
 			@Override
@@ -53,7 +69,6 @@ public class Controller {
 				menuChangeTo(menuClique);
 
 			}
-
 		};
 
 		grafoSimples = new Grafo("Grafo Simples");
@@ -67,24 +82,33 @@ public class Controller {
 		menu = menuPrincipal;
 
 		frame.add(menu.getMenu(), BorderLayout.NORTH);
-		frame.add(resultado.getResultado(), BorderLayout.CENTER);
+		frame.add(resultado.getView(), BorderLayout.CENTER);
 
 		frame.setVisible(true);
 		frame.pack();
 	}
 	private void menuChangeTo(Menu menu){
-		frame.remove(this.menu.getMenu());
-		this.menu = menu;
-//		this.menu.updateInfo();
-		frame.add(this.menu.getMenu(), BorderLayout.NORTH);
-		frame.pack();
+		if(this.menu != menu){
+
+			frame.remove(this.menu.getMenu());
+
+			this.menu = menu;
+			frame.add(this.menu.getMenu(), BorderLayout.NORTH);
+
+			this.menu.updateInfo();
+
+			frame.pack();
+		}
+	}
+
+	public void updateView(Resultado result) {
+		if(resultado != result){
+			frame.remove(this.resultado.getView());
+
+			this.resultado = result;
+			frame.add(this.resultado.getView(), BorderLayout.CENTER);
+
+			frame.repaint();
+		}
 	}
 }
-//eventos:
-//grafo change - mudar título, mudar texto, mudar label do menu
-//vertice adicionado mudar texto
-//aresta adicionada mudar texto
-//remover all mudar texto
-//importar
-//exportar
-//exibicao change mudar texto

@@ -62,7 +62,7 @@ public class MenuPrincipal extends Menu{
 		JButton[] actionopcoes = {addVertice,resetGrafo, importarGrafo, exportarGrafo};
 		actions = new JComboBox<JButton>(actionopcoes);
 
-		qtdeV = new JLabel(grafo.getvCounter() + "");
+		qtdeV = new JLabel(grafo.getNumVertices() + "");
 
 
 		addAresta1.addKeyListener(Menu.digitOnlyAdapter());
@@ -134,15 +134,19 @@ public class MenuPrincipal extends Menu{
 
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				grafo = (Grafo) e.getItem();
-				updateInfo();
+				if(ItemEvent.SELECTED == e.getStateChange()){
+					grafo = (Grafo) e.getItem();
+					updateInfo();
+				}
 			}
 		});
 		opcoesExibicao.addItemListener(new ItemListener() {
 
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				updateInfo();
+				if(ItemEvent.SELECTED == e.getStateChange()){
+					updateInfo();
+				}
 			}
 		});
 
@@ -199,7 +203,7 @@ public class MenuPrincipal extends Menu{
 	}
 
 	protected void updateInfo(){
-		qtdeV.setText(""+grafo.getvCounter());
+		qtdeV.setText(""+grafo.getNumVertices());
 
 		updateInfo.updateTitle(Frame.titulo + " - " + grafo.getNome());
 
@@ -214,8 +218,9 @@ public class MenuPrincipal extends Menu{
 		}else if(opcao.compareTo("info") == 0){
 			exibir = grafo.toString_GrafoInfo();
 		}else if(opcao.compareTo("cliques") == 0){
-			updateInfo.updateToMenuClique();
 			opcoesExibicao.setSelectedIndex(0);
+			updateInfo.updateToMenuClique();
+			return;
 		}
 
 		updateInfo.updateText(exibir);
