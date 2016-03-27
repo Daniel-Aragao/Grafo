@@ -51,21 +51,33 @@ public class Grafo {
 		return false;
 	}
 
-//	public Vertice removeVertice(int index) {
-//		Vertice toRemove = null;
-//		if (index <= vertices.size()) {
-//			if (contains(index)) {
-//				for (Vertice v : vertices) {
-//					if (index == v.getIndex()) {
-//						toRemove = v;
-//						break;
-//					}
-//				}
-//			}
-//		}
-//		removeFromAll(toRemove);
-//		return toRemove;
-//	}
+	public Vertice removeVertice(int index) {
+		Vertice toRemove = vertices.get(index);
+
+		for(Vertice v : vertices){
+			while(v.contains(toRemove)){
+				removeAresta(vertices.indexOf(v),index);
+				v.removeAresta(toRemove);
+			}
+		}
+
+		vertices.remove(toRemove);
+
+		return toRemove;
+	}
+
+	public Vertice removeVertice(Vertice toRemove) {
+		for(Vertice v : vertices){
+			while(v.contains(toRemove)){
+				removeAresta(vertices.indexOf(v),vertices.indexOf(toRemove));
+				v.removeAresta(toRemove);
+			}
+		}
+
+		vertices.remove(toRemove);
+
+		return toRemove;
+	}
 //	private void removeFromAll(Vertice toRemove){
 //		for(Vertice v : vertices){
 //			if(v.contains(toRemove)){
@@ -115,6 +127,44 @@ public class Grafo {
 
 		return false;
 	}
+	public boolean removerAresta(int i, int j){
+		i--;
+		j--;
+		return removeAresta(i,j);
+	}
+
+	protected boolean removeAresta(int i, int j){
+		if(i < vertices.size() && j < vertices.size() && i >= 0 && j >= 0){
+			Vertice v1 = vertices.get(i);
+			Vertice v2 = vertices.get(j);
+
+			if(v1.contains(v2) && v2.contains(v1)){
+				v1.removeAresta(v2);
+				v2.removeAresta(v1);
+
+				removeFromLog(i+1, j+1);
+				return true;
+			}
+
+		}
+		return false;
+	}
+
+	protected void removeFromLog(int i, int j){
+		int index = -1;
+
+		int busca = 0;
+		for(String s : log){
+			if(s.equals(i+","+j)){
+				index = busca;
+			}
+			busca++;
+		}
+
+		if(index < log.size() && index >= 0)
+		log.remove(index);
+	}
+
 	public String toString_Matriz(){
 		int[][] m = getMatrizDeAdjacencias();
 		String retorno = "";
@@ -300,21 +350,25 @@ public class Grafo {
 	public ArrayList<Grafo> getCliques(int k){
 		ArrayList<Grafo> cliques = new ArrayList<Grafo>();
 
-		cliques.add(this);
-		cliques.add(this);
-		cliques.add(this);
-		cliques.add(this);
-		cliques.add(this);
-		cliques.add(this);
-//		for(Vertice v : vertices){
-//
-//
-//
-//
-//
-//		}
+
 
 		return cliques;
+	}
+
+	private void passVertices(Grafo g1, Grafo g2){
+		for(Vertice v : g1.vertices){
+			g2.addVertice(v);
+		}
+	}
+
+
+	private boolean allHave(Grafo grafo, Vertice vert){
+		for(Vertice v : grafo.vertices){
+			if(!v.contains(vert) || !vert.contains(v)){
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public Grafo getCliqueMaximal(){
@@ -337,6 +391,15 @@ public class Grafo {
 		}
 
 		return maximal;
+	}
+	public String toString_Log() {
+		String sLog = "";
+
+		for(String s : getGrafoLog()){
+			sLog +=s + "\n";
+		}
+
+		return sLog;
 	}
 
 

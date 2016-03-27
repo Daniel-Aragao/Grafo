@@ -25,6 +25,7 @@ public class MenuPrincipal extends Menu{
 	private JButton resetGrafo;
 	private JButton addVertice;
 	private JButton addAresta;
+	private JButton removeAresta;
 	private JButton confirmarAction;
 	private JButton importarGrafo;
 	private JButton exportarGrafo;
@@ -49,14 +50,15 @@ public class MenuPrincipal extends Menu{
 		addVertice = new JButton("+ Vertice"){@Override public String toString(){ return this.getText();}};
 		importarGrafo = new JButton("Importar"){@Override public String toString(){ return this.getText();}};
 		exportarGrafo = new JButton("Exportar"){@Override public String toString(){ return this.getText();}};
-		addAresta = new JButton("+ Aresta ");
+		addAresta = new JButton("+");
+		removeAresta = new JButton("-");
 
 		addAresta1 = new JTextField(5);
 		addAresta2 = new JTextField(5);
 
 		comboGrafos = new JComboBox<Grafo>(grafos);
 
-		String[] opcoes = {"Matriz", "Lista","Cliques", "Info"};
+		String[] opcoes = {"Matriz", "Lista","Cliques", "Info", "Log"};
 		opcoesExibicao = new JComboBox<String>(opcoes);
 
 		JButton[] actionopcoes = {addVertice,resetGrafo, importarGrafo, exportarGrafo};
@@ -79,9 +81,10 @@ public class MenuPrincipal extends Menu{
 		menu.add(qtdeV);
 
 		menu.add(addAresta1);
-
 		menu.add(addAresta2);
+
 		menu.add(addAresta);
+		menu.add(removeAresta);
 
 		menu.add(comboGrafos);
 		menu.add(opcoesExibicao);
@@ -120,6 +123,26 @@ public class MenuPrincipal extends Menu{
 					int b = Integer.parseInt(addAresta2.getText());
 
 					if(grafo.addAresta(a, b)){
+						addAresta1.setText("");
+						addAresta2.setText("");
+					}
+					updateInfo();
+				}catch(NumberFormatException nfe){
+					nfe.printStackTrace();
+				}
+
+			}
+		});
+		removeAresta.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				try{
+					int a = Integer.parseInt(addAresta1.getText());
+					int b = Integer.parseInt(addAresta2.getText());
+
+					if(grafo.removerAresta(a, b)){
 						addAresta1.setText("");
 						addAresta2.setText("");
 					}
@@ -221,6 +244,8 @@ public class MenuPrincipal extends Menu{
 			opcoesExibicao.setSelectedIndex(0);
 			updateInfo.updateToMenuClique();
 			return;
+		}else if(opcao.compareTo("log") == 0){
+			exibir = grafo.toString_Log();
 		}
 
 		updateInfo.updateText(exibir);

@@ -32,6 +32,22 @@ public class GrafoDirigido extends Grafo {
 
 		return false;
 	}
+	@Override
+	protected boolean removeAresta(int i, int j){
+		if(i < vertices.size() && j < vertices.size() && i >= 0 && j >= 0){
+			Vertice vi = vertices.get(i);
+			Vertice vj = vertices.get(j);
+
+			if(vi.contains(vj)){
+				vi.removeAresta(vj);
+
+				removeFromLog(i, j);
+				return true;
+			}
+
+		}
+		return false;
+	}
 
 	@Override
 	public String getNome(){

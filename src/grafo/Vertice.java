@@ -18,12 +18,7 @@ public class Vertice {
 	}
 
 	public boolean removeAresta(Vertice v){
-		if( adjacencias.remove(v)){
-			v.removeAresta(this);
-			return true;
-		}
-
-		return false;
+		return adjacencias.remove(v);
 	}
 
 	public int getIndex() {
