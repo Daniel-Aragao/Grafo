@@ -351,26 +351,47 @@ public class Grafo {
 		int[][] listaAdj = getListasAdjacencias();
 		ArrayList<String> listas = new ArrayList<String>();
 
-		int cliqueCount = 0;
 		for(int i = 0; i < listaAdj.length; i++){
-			int [] clique = new int[listaAdj.length];
-			doValue(clique,-1);
-			clique[0] = i;
-			cliqueCount++;
+			ArrayList<int[]> cliques = new ArrayList<int[]>();
+			int [] cliqueInicial = new int[listaAdj.length];
+			doValue(cliqueInicial,-1);
+			cliqueInicial[0] = i;
+			cliques.add(cloneVetor(cliqueInicial));
 
 			for(int j = 0; j < listaAdj.length; j++){
-				if( j!=i &&allHave(listaAdj, clique, j)){
-					listas.add(toString_Lista_Clique(cliqueToListaAdjacencias(clique)));
-					clique[cliqueCount] = j;
-					cliqueCount++;
+				int size = cliques.size();
+				for(int p = 0; p < size; p++){
+					int[] clique = cliques.get(p);
+					if( j!=i &&allHave(listaAdj, clique, j)){
+//						listas.add(toString_Lista_Clique(cliqueToListaAdjacencias(clique)));
+						cliques.add(cloneVetor(clique));
+						clique[getFinalVetor(clique,-1)] = j;
+					}
 				}
 			}
 
-			cliqueCount = 0;
-			listas.add(toString_Lista_Clique(cliqueToListaAdjacencias(clique)));
+			for(int[] clique : cliques){
+				if(getFinalVetor(clique, -1) >= k)
+				listas.add(toString_Lista_Clique(cliqueToListaAdjacencias(clique)));
+			}
 		}
 
 		return listas;
+	}
+	private int getFinalVetor(int[] a, int b) {
+		for(int i = 0; i < a.length; i++){
+			if(a[i]==b){
+				return i;
+			}
+		}
+		return a.length;
+	}
+	private int[] cloneVetor(int[]a){
+		int[] b = new int[a.length];
+
+		for(int i = 0; i < a.length; i++)b[i] = a[i];
+
+		return b;
 	}
 	private void doValue(int[]v, int e){
 		for(int i = 0; i < v.length; i++){
@@ -378,13 +399,6 @@ public class Grafo {
 		}
 	}
 	private boolean allHave(int[][]a,int[]b, int e){
-///////////////////////////////teste
-//		for(int i = 0; i < b.length; i++){
-//			System.out.println(b[i]);
-//		}
-//		System.out.println("e:" + e);
-//		System.out.println("-------");
-///////////////////////////////teste
 		for(int i = 0; i < b.length; i++){
 			int x = b[i];
 			if(x != -1){
