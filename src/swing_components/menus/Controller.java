@@ -24,7 +24,7 @@ public class Controller {
 
 	IupdateInfo updateInfo;
 
-	private Grafo[] grafos;
+	private ArrayList<Grafo> grafos;
 	private Grafo grafoSimples;
 	private GrafoDirigido grafoDirigido;
 
@@ -61,12 +61,12 @@ public class Controller {
 
 			@Override
 			public void updateToMenuPrincipal() {
-				menuChangeTo(menuPrincipal);
+				menuChangeTo(new MenuPrincipal(grafos,updateInfo));
 			}
 
 			@Override
 			public void updateToMenuClique() {
-				menuChangeTo(menuClique);
+				menuChangeTo(new MenuClique(grafos,updateInfo));
 
 			}
 		};
@@ -74,8 +74,10 @@ public class Controller {
 		grafoSimples = new Grafo("Grafo Simples");
 		grafoDirigido = new GrafoDirigido("Grafo Dirigido");
 
-		Grafo[] grafos = {grafoSimples, grafoDirigido};
-		this.grafos = grafos;
+		this.grafos = new ArrayList<Grafo>();
+
+		this.grafos.add(grafoSimples);
+		this.grafos.add(grafoDirigido);
 
 		menuClique = new MenuClique(this.grafos, updateInfo);
 		menuPrincipal = new MenuPrincipal(this.grafos, updateInfo);

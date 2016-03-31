@@ -236,6 +236,7 @@ public class Grafo {
 			stringMatrizDeGrau += "\nCompleto: "+isCompleto();
 			stringMatrizDeGrau += "\nConexo: "+isConexo();
 			stringMatrizDeGrau += "\nBipartido: "+isBipartido();
+			stringMatrizDeGrau += "\nRegular: "+isRegular();
 		}
 		return stringMatrizDeGrau;
 	}
@@ -256,7 +257,7 @@ public class Grafo {
 		return getNome();
 	}
 
-	public int[][] getListaAdjacencias(){
+	public int[][] getListasAdjacencias(){
 		int [][] matriz = new int[vertices.size()][];
 
 		for(int i = 0; i < matriz.length; i++){
@@ -271,7 +272,7 @@ public class Grafo {
 		return matriz;
 	}
 	public String toString_Lista(){
-		int[][] m = getListaAdjacencias();
+		int[][] m = getListasAdjacencias();
 		String retorno = "";
 
 			for(int i = 0; i < m.length; i++){
@@ -286,38 +287,37 @@ public class Grafo {
 
 	public boolean isBipartido(){
 		if(vertices.isEmpty()) return false;
+		for(int j = 0 ; j < vertices.size();j++){
+				ArrayList<Vertice> A = new ArrayList<Vertice>();
+				ArrayList<Vertice> B = new ArrayList<Vertice>();
+				Vertice inicial = vertices.get(j);
+				A.add(inicial);
 
-		ArrayList<Vertice> A = new ArrayList<Vertice>();
-		ArrayList<Vertice> B = new ArrayList<Vertice>();
-		Vertice inicial = vertices.get(0);
-		A.add(inicial);
-
-		for(Vertice v : vertices){
-			if(v != inicial){
-				if(inicial.contains(v)){
-					B.add(v);
-				}else{
-					A.add(v);
+				for(Vertice v : vertices){
+					if(v != inicial){
+						if(inicial.contains(v)){
+							B.add(v);
+						}else{
+							A.add(v);
+						}
+					}
 				}
-			}
+				boolean stillBipartido = true;
+				for(int i = 0 ; i < A.size() - 1; i++){
+					Vertice primeiro = A.get(i);
+					Vertice segundo = A.get(i+1);
+					if(primeiro.contains(segundo)||segundo.contains(primeiro))stillBipartido = false;
+				}
+
+				for(int i = 0 ; i < B.size() - 1; i++){
+					Vertice primeiro = B.get(i);
+					Vertice segundo = B.get(i+1);
+					if(primeiro.contains(segundo)||segundo.contains(primeiro))stillBipartido = false;
+				}
+				if(stillBipartido) return true;
 		}
 
-		for(int i = 0 ; i < A.size() - 1; i++){
-			Vertice primeiro = A.get(i);
-			Vertice segundo = A.get(i+1);
-			if(primeiro.contains(segundo))return false;
-			if(segundo.contains(primeiro))return false;
-		}
-
-		for(int i = 0 ; i < B.size() - 1; i++){
-			Vertice primeiro = B.get(i);
-			Vertice segundo = B.get(i+1);
-			if(primeiro.contains(segundo)) return false;
-			if(segundo.contains(primeiro))return false;
-		}
-
-
-		return true;
+		return false;
 	}
 
 	public boolean isCompleto(){
@@ -347,51 +347,118 @@ public class Grafo {
 		return log;
 	}
 
-	public ArrayList<Grafo> getCliques(int k){
-		ArrayList<Grafo> cliques = new ArrayList<Grafo>();
+	public ArrayList<String> getCliques(int k){
+		int[][] listaAdj = getListasAdjacencias();
+		ArrayList<String> listas = new ArrayList<String>();
 
+		int cliqueCount = 0;
+		for(int i = 0; i < listaAdj.length; i++){
+			int [] clique = new int[listaAdj.length];
+			doValue(clique,-1);
+			clique[0] = i;
+			cliqueCount++;
 
-
-		return cliques;
-	}
-
-	private void passVertices(Grafo g1, Grafo g2){
-		for(Vertice v : g1.vertices){
-			g2.addVertice(v);
-		}
-	}
-
-
-	private boolean allHave(Grafo grafo, Vertice vert){
-		for(Vertice v : grafo.vertices){
-			if(!v.contains(vert) || !vert.contains(v)){
-				return false;
-			}
-		}
-		return true;
-	}
-
-	public Grafo getCliqueMaximal(){
-		Grafo maximal = new Grafo("Maximal");
-
-		maximal.addVertice(getVertice(0));
-		for(int i = 1; i < vertices.size(); i++){
-			Vertice vIterator = vertices.get(i);
-
-			boolean allHave = true;
-			for(Vertice v : maximal.vertices){
-				if(!v.contains(vIterator) || !vIterator.contains(v)){
-					allHave = false;
+			for(int j = 0; j < listaAdj.length; j++){
+				if( j!=i &&allHave(listaAdj, clique, j)){
+					listas.add(toString_Lista_Clique(cliqueToListaAdjacencias(clique)));
+					clique[cliqueCount] = j;
+					cliqueCount++;
 				}
 			}
 
-			if(allHave){
-				maximal.addVertice(vIterator);
+			cliqueCount = 0;
+			listas.add(toString_Lista_Clique(cliqueToListaAdjacencias(clique)));
+		}
+
+		return listas;
+	}
+	private void doValue(int[]v, int e){
+		for(int i = 0; i < v.length; i++){
+			v[i] = e;
+		}
+	}
+	private boolean allHave(int[][]a,int[]b, int e){
+///////////////////////////////teste
+//		for(int i = 0; i < b.length; i++){
+//			System.out.println(b[i]);
+//		}
+//		System.out.println("e:" + e);
+//		System.out.println("-------");
+///////////////////////////////teste
+		for(int i = 0; i < b.length; i++){
+			int x = b[i];
+			if(x != -1){
+				boolean controle = false;
+				if(a[x]!= null){
+					for(int j = 0; j < a[x].length;j++){
+						if(a[x][j] == e){
+							controle = true;
+						}
+					}
+				}
+
+				if(!controle) return false;
 			}
 		}
 
-		return maximal;
+		return true;
 	}
+	private int[][] cliqueToListaAdjacencias(int[] clique){
+
+
+		int[][] lista = new int[vertices.size()][];
+
+		for(int i = 0; i < clique.length; i++){
+			int x = clique[i];
+			if(x!= -1){
+				doValue(lista[x] = new int[clique.length],-1);
+				for(int j = 0; j < clique.length; j++){
+					if(x != clique[j])lista[x][j] = clique[j];
+				}
+			}
+		}
+
+		return lista;
+	}
+	private String toString_Lista_Clique(int[][] m){
+		String retorno = "";
+
+		for(int i = 0; i < m.length; i++){
+			if(m[i] != null){
+				retorno += (i+1)+"=> ";
+				for(int j = 0; j < m[i].length; j++){
+					if(m[i][j]!=-1)
+						retorno += ((m[i][j]+1)+" ");
+				}
+				retorno +="\n";
+			}
+		}
+		return retorno;
+	}
+
+
+
+//	public Grafo getCliqueMaximal(){
+//		Grafo maximal = new Grafo("Maximal");
+//
+//		maximal.addVertice(getVertice(0));
+//		for(int i = 1; i < vertices.size(); i++){
+//			Vertice vIterator = vertices.get(i);
+//
+//			boolean allHave = true;
+//			for(Vertice v : maximal.vertices){
+//				if(!v.contains(vIterator) || !vIterator.contains(v)){
+//					allHave = false;
+//				}
+//			}
+//
+//			if(allHave){
+//				maximal.addVertice(vIterator);
+//			}
+//		}
+//
+//		return maximal;
+//	}
 	public String toString_Log() {
 		String sLog = "";
 
@@ -400,6 +467,21 @@ public class Grafo {
 		}
 
 		return sLog;
+	}
+
+	public boolean isRegular(){
+		int[][] matriz = getMatrizDeAdjacencias();
+		int[] graus = new int[matriz.length];
+
+		for(int i = 0; i < matriz.length; i++){
+			for(int j = 0; j < matriz[i].length; j++ ){
+				graus[i] += matriz[i][j];
+			}
+		}
+		for(int j = 1; j < graus.length; j++ ){
+			if(graus[j] != graus[j-1]) return false;
+		}
+		return true;
 	}
 
 

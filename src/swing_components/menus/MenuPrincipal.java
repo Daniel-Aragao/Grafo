@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -41,9 +42,8 @@ public class MenuPrincipal extends Menu{
 
 
 	@SuppressWarnings("serial")
-	public MenuPrincipal(Grafo[] grafos, IupdateInfo updateInfo){
+	public MenuPrincipal(ArrayList<Grafo> grafos, IupdateInfo updateInfo){
 		super(grafos, updateInfo);
-
 
 		confirmarAction = new JButton("Confirmar");
 		resetGrafo = new JButton("Remover todos"){@Override public String toString(){ return this.getText();}};
@@ -56,7 +56,10 @@ public class MenuPrincipal extends Menu{
 		addAresta1 = new JTextField(5);
 		addAresta2 = new JTextField(5);
 
-		comboGrafos = new JComboBox<Grafo>(grafos);
+		comboGrafos = new JComboBox<Grafo>();
+		for(Grafo g : grafos){
+			comboGrafos.addItem(g);
+		}
 
 		String[] opcoes = {"Matriz", "Lista","Cliques", "Info", "Log"};
 		opcoesExibicao = new JComboBox<String>(opcoes);
@@ -194,6 +197,7 @@ public class MenuPrincipal extends Menu{
 
 					if(grafoImportado!= null){
 						comboGrafos.addItem(grafoImportado);
+						grafos.add(grafoImportado);
 						PopUpsAssistent.exibirMenssagem("Sucesso ao Importar de: "+ path,
 								JOptionPane.INFORMATION_MESSAGE);
 					}

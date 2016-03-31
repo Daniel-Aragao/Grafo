@@ -2,6 +2,8 @@ package listeners;
 
 import java.util.ArrayList;
 
+import grafo.Grafo;
+
 public interface IupdateInfo {
 	public void updateTitle(String newTitle);
 	public void updateText(String newText);

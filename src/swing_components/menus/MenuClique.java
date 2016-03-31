@@ -22,7 +22,7 @@ public class MenuClique extends Menu{
 
 	private ArrayList<String> cliques;
 
-	public MenuClique(Grafo[] grafos, IupdateInfo updateInfo) {
+	public MenuClique(ArrayList<Grafo> grafos, IupdateInfo updateInfo) {
 		super(grafos, updateInfo);
 
 		voltarPrincipal = new JButton("Voltar");
@@ -30,7 +30,10 @@ public class MenuClique extends Menu{
 
 		kCliques = new JTextField(5);
 
-		this.grafos = new JComboBox<Grafo>(grafos);
+		this.grafos = new JComboBox<Grafo>();
+		for(Grafo g : grafos){
+			this.grafos.addItem(g);
+		}
 
 		cliques = new ArrayList<String>();
 
@@ -60,22 +63,14 @@ public class MenuClique extends Menu{
 				try{
 					k = Integer.parseInt(kCliques.getText());
 				}catch(NumberFormatException erro){
-					k = ((Grafo)grafos.getSelectedItem()).getNumVertices();
+					k = 0;//((Grafo)grafos.getSelectedItem()).getNumVertices();
 				}
 
-				cliques_to_string(((Grafo)grafos.getSelectedItem()).getCliques(k));
+				cliques = ((Grafo)grafos.getSelectedItem()).getCliques(k);
 
 				updateInfo();
 			}
 		});
-	}
-
-	protected void cliques_to_string(ArrayList<Grafo> _cliques) {
-		cliques = new ArrayList<String>();
-		for(Grafo g : _cliques){
-			cliques.add(g.toString_Lista());
-		}
-
 	}
 
 	protected void updateInfo() {

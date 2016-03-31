@@ -3,6 +3,7 @@ package swing_components.menus;
 import java.awt.FlowLayout;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
@@ -13,20 +14,20 @@ public abstract class Menu {
 	protected JPanel menu;
 
 	protected Grafo grafo;
-	protected Grafo[] grafos;
+	protected ArrayList<Grafo> grafos;
 
 	protected IupdateInfo updateInfo;
 
-	public Menu(Grafo[] grafos, IupdateInfo updateInfo){
-		if(grafos.length < 0 ){
-			throw new RuntimeException("grafos.length < 0");
+	public Menu(ArrayList<Grafo> grafos, IupdateInfo updateInfo){
+		if(grafos.size() < 0 ){
+			throw new RuntimeException("grafos.size() < 0");
 		}
 		menu = new JPanel();
 		menu.setLayout(new FlowLayout(FlowLayout.LEFT));
 //		menu.setBorder(BorderFactory.createEtchedBorder());
 
 		this.grafos = grafos;
-		grafo = grafos[0];
+		grafo = grafos.get(0);
 
 		this.updateInfo = updateInfo;
 	}

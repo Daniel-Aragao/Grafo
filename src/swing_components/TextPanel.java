@@ -29,7 +29,9 @@ public class TextPanel extends Resultado{
 
 	@Override
 	public void setResultado(ArrayList<String> texts) {
-		// TODO Auto-generated method stub
+		for(String s : texts){
+			matrizAdjacencias.append(s);
+		}
 
 	}
 
