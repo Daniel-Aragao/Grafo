@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import grafo.Grafo;
@@ -20,6 +21,8 @@ public class MenuClique extends Menu{
 
 	private JComboBox<Grafo> grafos;
 
+	private JLabel qtdeC;
+
 	private ArrayList<String> cliques;
 
 	public MenuClique(ArrayList<Grafo> grafos, IupdateInfo updateInfo) {
@@ -27,6 +30,8 @@ public class MenuClique extends Menu{
 
 		voltarPrincipal = new JButton("Voltar");
 		selecionarCliques = new JButton("Selecionar");
+
+		qtdeC = new JLabel("0");
 
 		kCliques = new JTextField(5);
 
@@ -44,6 +49,7 @@ public class MenuClique extends Menu{
 		menu.add(this.grafos);
 		menu.add(kCliques);
 		menu.add(selecionarCliques);
+		menu.add(qtdeC);
 	}
 
 	private void addActionListeners(){
@@ -79,6 +85,8 @@ public class MenuClique extends Menu{
 		if(cliques != null){
 			updateInfo.updateArrayText(cliques);
 		}
+
+		qtdeC.setText(""+cliques.size());
 
 		updateInfo.updatePack();
 	}

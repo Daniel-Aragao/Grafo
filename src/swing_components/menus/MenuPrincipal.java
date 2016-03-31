@@ -198,12 +198,12 @@ public class MenuPrincipal extends Menu{
 					if(grafoImportado!= null){
 						comboGrafos.addItem(grafoImportado);
 						grafos.add(grafoImportado);
+						updateInfo();
 						PopUpsAssistent.exibirMenssagem("Sucesso ao Importar de: "+ path,
 								JOptionPane.INFORMATION_MESSAGE);
 					}
 
 				}
-
 			}
 		});
 		exportarGrafo.addActionListener(new ActionListener() {
